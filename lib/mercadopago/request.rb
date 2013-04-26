@@ -12,6 +12,7 @@ module MercadoPago
     # This URL is the base for all API calls.
     #
     MERCADOPAGO_URL = 'https://api.mercadolibre.com'
+    SANDBOX_MERCADOPAGO_URL = 'https://api.mercadolibre.com/sandbox'
 
     #
     # Makes a POST request to a MercaPago API.
@@ -20,9 +21,18 @@ module MercadoPago
     # - payload: the data to be trasmitted to the API.
     # - headers: the headers to be transmitted over the HTTP request.
     #
-    def self.wrap_post(path, payload, headers = {})
+    def self.wrap_post(path, payload, headers = {}, sandbox=false)
       raise ClientError('No data given') if payload.nil? or payload.empty?
-      make_request(:post, path, payload, headers)
+      make_request(:post, path, payload, headers, sandbox)
+    end
+
+    def self.wrap_put(path, payload, headers = {}, sandbox=false)
+      raise ClientError('No data given') if payload.nil? or payload.empty?
+      url = sandbox ? SANDBOX_MERCADOPAGO_URL : MERCADOPAGO_URL
+      response = RestClient.put("#{url}#{path}", payload, headers)
+      JSON.load(response)
+      rescue Exception => e
+        puts e
     end
 
     #
@@ -31,8 +41,8 @@ module MercadoPago
     # - path: the path of the API to be called, including any query string parameters.
     # - headers: the headers to be transmitted over the HTTP request.
     #
-    def self.wrap_get(path, headers = {})
-      make_request(:get, path, nil, headers)
+    def self.wrap_get(path, headers = {}, sandbox=false)
+      make_request(:get, path, nil, headers, sandbox)
     end
 
     #
@@ -43,8 +53,9 @@ module MercadoPago
     # - payload: the data to be trasmitted to the API.
     # - headers: the headers to be transmitted over the HTTP request.
     #
-    def self.make_request(type, path, payload = nil, headers = {})
-      args = [type, "#{MERCADOPAGO_URL}#{path}", payload, headers].compact
+    def self.make_request(type, path, payload = nil, headers = {}, sandbox=false)
+      url = sandbox ? SANDBOX_MERCADOPAGO_URL : MERCADOPAGO_URL
+      args = [type, "#{url}#{path}", payload, headers].compact
       response = RestClient.send *args
 
       JSON.load(response)

@@ -22,7 +22,7 @@ module MercadoPago
   #
   class Client
 
-    attr_reader :access_token, :refresh_token
+    attr_reader :access_token, :refresh_token, :sandbox
 
     #
     # Creates an instance and stores the access_token to make calls to the
@@ -31,8 +31,9 @@ module MercadoPago
     # - client_id
     # - client_secret
     #
-    def initialize(client_id, client_secret)
-      load_tokens MercadoPago::Authentication.access_token(client_id, client_secret)
+    def initialize(client_id, client_secret, sandbox=false)
+      load_tokens MercadoPago::Authentication.access_token(client_id, client_secret, sandbox)
+      @sandbox = sandbox
     end
 
     #
@@ -42,7 +43,7 @@ module MercadoPago
     # - client_secret
     #
     def refresh_access_token(client_id, client_secret)
-      load_tokens MercadoPago::Authentication.refresh_access_token(client_id, client_secret, @refresh_token)
+      load_tokens MercadoPago::Authentication.refresh_access_token(client_id, client_secret, @refresh_token, @sandbox)
     end
 
     #
@@ -51,7 +52,7 @@ module MercadoPago
     # - data: contains the data according to the payment preference that will be created.
     #
     def create_preference(data)
-      MercadoPago::Checkout.create_preference(@access_token, data)
+      MercadoPago::Checkout.create_preference(@access_token, data, @sandbox)
     end
 
     #
@@ -60,7 +61,7 @@ module MercadoPago
     # - preference_id: the id of the payment preference that will be retrieved.
     #
     def get_preference(preference_id)
-      MercadoPago::Checkout.get_preference(@access_token, preference_id)
+      MercadoPago::Checkout.get_preference(@access_token, preference_id, @sandbox)
     end
 
     #
@@ -69,7 +70,7 @@ module MercadoPago
     # - payment_id: the id of the payment to be checked.
     #
     def notification(payment_id)
-      MercadoPago::Collection.notification(@access_token, payment_id)
+      MercadoPago::Collection.notification(@access_token, payment_id, @sandbox)
     end
 
     #
@@ -78,7 +79,25 @@ module MercadoPago
     # - search_hash: the search hash to find collections.
     #
     def search(search_hash)
-      MercadoPago::Collection.search(@access_token, search_hash)
+      MercadoPago::Collection.search(@access_token, search_hash, @sandbox)
+    end
+
+    #
+    # Cancels a payment.
+    #
+    # - payment_id: the id of the payment to be cancelled.
+    #
+    def cancel_payment(payment_id)
+      MercadoPago::Collection.cancel(@access_token, payment_id, @sandbox)
+    end
+
+    #
+    # Refunds a payment.
+    #
+    # - payment_id: the id of the payment to be refunded.
+    #
+    def refund_payment(payment_id)
+      MercadoPago::Collection.refund(@access_token, payment_id, @sandbox)
     end
 
     #
@@ -93,8 +112,8 @@ module MercadoPago
     #
     def load_tokens(auth)
       mandatory_keys = %w{ access_token refresh_token }
-
-      if (auth.keys & mandatory_keys) == mandatory_keys
+      #if (auth.keys & mandatory_keys) == mandatory_keys
+      if (mandatory_keys - auth.keys).empty?
         @access_token   = auth['access_token']
         @refresh_token  = auth['refresh_token']
       else

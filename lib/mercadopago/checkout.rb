@@ -12,11 +12,11 @@ module MercadoPago
     #                 receive the money from the payment of this checkout preference.
     # - data: a hash of preferences that will be trasmitted to checkout API.
     #
-    def self.create_preference(access_token, data)
+    def self.create_preference(access_token, data, sandbox=false)
       payload = JSON.generate(data)
-      headers = { content_type: 'application/json', accept: 'application/json' }
+      headers = { :content_type => 'application/json', :accept => 'application/json' }
 
-      MercadoPago::Request.wrap_post("/checkout/preferences?access_token=#{access_token}", payload, headers)
+      MercadoPago::Request.wrap_post("/checkout/preferences?access_token=#{access_token}", payload, headers, sandbox)
     end
 
     # Returns the hash with the details of certain payment preference.
@@ -24,9 +24,9 @@ module MercadoPago
     # - access_token: the MercadoPago account access token
     # - preference_id: the payment preference ID
     #
-    def self.get_preference(access_token, preference_id)
-      headers = { accept: 'application/json' }
-      MercadoPago::Request.wrap_get("/checkout/preferences/#{preference_id}?access_token=#{access_token}")
+    def self.get_preference(access_token, preference_id, sandbox=false)
+      headers = {:content_type => 'application/json', :accept => 'application/json' }
+      MercadoPago::Request.wrap_get("/checkout/preferences/#{preference_id}?access_token=#{access_token}", headers,  sandbox)
     end
 
     #

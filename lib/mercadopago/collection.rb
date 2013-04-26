@@ -9,8 +9,8 @@ module MercadoPago
     # - access_token: an access_token of the MercadoPago account associated with the payment to be checked.
     # - payment_id: the id of the payment to be checked.
     #
-    def self.notification(access_token, payment_id)
-      MercadoPago::Request.wrap_get("/collections/notifications/#{payment_id}?access_token=#{access_token}", { accept: 'application/json' })
+    def self.notification(access_token, payment_id, sandbox=false)
+      MercadoPago::Request.wrap_get("/collections/notifications/#{payment_id}?access_token=#{access_token}", { :accept => 'application/json' }, sandbox)
     end
 
     #
@@ -81,10 +81,22 @@ module MercadoPago
     #     subscription_payment::
     #       Subscription fee.
     #
-    def self.search(access_token, search_hash = {})
+    def self.search(access_token, search_hash = {}, sandbox=false)
       query = search_hash.map { |e| e.join('=') }.join('&')
 
-      MercadoPago::Request.wrap_get("/collections/search?access_token=#{access_token}&#{query}", { accept: 'application/json' })
+      MercadoPago::Request.wrap_get("/collections/search?access_token=#{access_token}&#{query}", { :accept => 'application/json' }, sandbox)
+    end
+
+    def self.cancel(access_token, payment_id, sandbox=false)
+      payload = { :status => 'cancelled' }
+      headers = { "Content-Type" => "application/json", :accept => 'application/json' }
+      MercadoPago::Request.wrap_put("/collections/#{payment_id}?access_token=#{access_token}", payload, headers, sandbox)
+    end
+
+    def self.refund(access_token, payment_id, sandbox=false)
+      payload = { :status => 'refunded' }
+      headers = { "Content-Type" => "application/json", :accept => 'application/json' }
+      MercadoPago::Request.wrap_put("/collections/#{payment_id}?access_token=#{access_token}", payload, headers, sandbox)
     end
 
   end

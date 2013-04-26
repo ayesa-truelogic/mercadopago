@@ -12,11 +12,11 @@ module MercadoPago
     # - client_id
     # - client_secret
     #
-    def self.access_token(client_id, client_secret)
-      payload = { grant_type: 'client_credentials', client_id: client_id, client_secret: client_secret }
-      headers = { content_type: 'application/x-www-form-urlencoded', accept: 'application/json' }
+    def self.access_token(client_id, client_secret, sandbox=false)
+      payload = { :grant_type =>  'client_credentials', :client_id => client_id, :client_secret => client_secret }
+      headers = { :content_type => 'application/x-www-form-urlencoded', :accept => 'application/json' }
 
-      MercadoPago::Request.wrap_post('/oauth/token', payload, headers)
+      MercadoPago::Request.wrap_post('/oauth/token', payload, headers, sandbox)
     end
 
     #
@@ -26,11 +26,11 @@ module MercadoPago
     # - client_secret
     # - refresh_token
     #
-    def self.refresh_access_token(client_id, client_secret, refresh_token)
-      payload = { grant_type: 'refresh_token', client_id: client_id, client_secret: client_secret, refresh_token: refresh_token }
-      headers = { content_type: 'application/x-www-form-urlencoded', accept: 'application/json' }
+    def self.refresh_access_token(client_id, client_secret, refresh_token, sandbox=false)
+      payload = { :grant_type => 'refresh_token', :client_id => client_id, :client_secret => client_secret, :refresh_token => refresh_token }
+      headers = { :content_type => 'application/x-www-form-urlencoded', :accept => 'application/json' }
 
-      MercadoPago::Request.wrap_post('/oauth/token', payload, headers)
+      MercadoPago::Request.wrap_post('/oauth/token', payload, headers, sandbox)
     end
 
   end
