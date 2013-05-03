@@ -8,7 +8,7 @@ class TestMercadoPago < MiniTest::Unit::TestCase
   #
   # Valid credentials to be used in the tests.
   #
-  CREDENTIALS = { :client_id => '3962917649351233', :client_secret => 'rp7Ec38haoig7zWQXekXMiqA068eS376' }
+  CREDENTIALS = { :client_id => '6157672666509627', :client_secret => '6eLnz3mT8WZzEJDAuXFMzRIjP0PYbRFO' }
 
   #
   # Example payment request.
@@ -134,14 +134,14 @@ class TestMercadoPago < MiniTest::Unit::TestCase
 #  end
 #
   def test_that_client_can_get_cancel_payment
-    payment_id = 213456778
+    payment_id = 1367610831 
     mp_client = MercadoPago::Client.new(CREDENTIALS[:client_id], CREDENTIALS[:client_secret])
 
     response = mp_client.cancel_payment(payment_id)
   end
 
   def test_that_client_can_get_refund_payment
-    payment_id = 213456778
+    payment_id = 1367610831 
     mp_client = MercadoPago::Client.new(CREDENTIALS[:client_id], CREDENTIALS[:client_secret])
 
     response = mp_client.refund_payment(payment_id)
