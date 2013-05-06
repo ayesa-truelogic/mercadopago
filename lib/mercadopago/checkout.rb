@@ -29,11 +29,11 @@ module MercadoPago
       MercadoPago::Request.wrap_get("/checkout/preferences/#{preference_id}?access_token=#{access_token}", headers,  sandbox)
     end
 
-    #
-    # TODO
-    #
-    def self.update_preference
-      # TODO
+    def self.update_preference(access_token, preference_id, data, sandbox=false)
+      payload = JSON.generate(data)
+      headers = { :content_type => 'application/json', :accept => 'application/json' }
+
+      MercadoPago::Request.wrap_put("/checkout/preferences/#{preference_id}?access_token=#{access_token}", payload, headers, sandbox)
     end
 
   end

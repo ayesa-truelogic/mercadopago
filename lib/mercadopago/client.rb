@@ -56,6 +56,15 @@ module MercadoPago
     end
 
     #
+    # Updates a payment preference.
+    #
+    # - data: contains the data according to the payment preference that will be updated.
+    #
+    def update_preference(preference_id, data)
+      MercadoPago::Checkout.update_preference(@access_token, preference_id, data, @sandbox)
+    end
+
+    #
     # Returns the payment preference.
     #
     # - preference_id: the id of the payment preference that will be retrieved.

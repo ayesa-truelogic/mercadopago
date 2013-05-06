@@ -88,13 +88,13 @@ module MercadoPago
     end
 
     def self.cancel(access_token, payment_id, sandbox=false)
-      payload = { :status => 'cancelled' }
+      payload = JSON.generate({ :status => 'cancelled' })
       headers = { "Content-Type" => "application/json", :accept => 'application/json' }
       MercadoPago::Request.wrap_put("/collections/#{payment_id}?access_token=#{access_token}", payload, headers, sandbox)
     end
 
     def self.refund(access_token, payment_id, sandbox=false)
-      payload = { :status => 'refunded' }
+      payload = JSON.generate({ :status => 'refunded' })
       headers = { "Content-Type" => "application/json", :accept => 'application/json' }
       MercadoPago::Request.wrap_put("/collections/#{payment_id}?access_token=#{access_token}", payload, headers, sandbox)
     end
