@@ -32,7 +32,7 @@ module MercadoPago
     # - client_secret
     #
     def initialize(client_id, client_secret, sandbox=false)
-      load_tokens MercadoPago::Authentication.access_token(client_id, client_secret, sandbox)
+      load_tokens MercadoPago::Authentication.access_token(client_id, client_secret)
       @sandbox = sandbox
     end
 
@@ -43,7 +43,7 @@ module MercadoPago
     # - client_secret
     #
     def refresh_access_token(client_id, client_secret)
-      load_tokens MercadoPago::Authentication.refresh_access_token(client_id, client_secret, @refresh_token, @sandbox)
+      load_tokens MercadoPago::Authentication.refresh_access_token(client_id, client_secret, @refresh_token)
     end
 
     #
@@ -52,7 +52,7 @@ module MercadoPago
     # - data: contains the data according to the payment preference that will be created.
     #
     def create_preference(data)
-      MercadoPago::Checkout.create_preference(@access_token, data, @sandbox)
+      MercadoPago::Checkout.create_preference(@access_token, data, false)
     end
 
     #
@@ -61,7 +61,7 @@ module MercadoPago
     # - data: contains the data according to the payment preference that will be updated.
     #
     def update_preference(preference_id, data)
-      MercadoPago::Checkout.update_preference(@access_token, preference_id, data, @sandbox)
+      MercadoPago::Checkout.update_preference(@access_token, preference_id, data, false)
     end
 
     #
@@ -70,7 +70,7 @@ module MercadoPago
     # - preference_id: the id of the payment preference that will be retrieved.
     #
     def get_preference(preference_id)
-      MercadoPago::Checkout.get_preference(@access_token, preference_id, @sandbox)
+      MercadoPago::Checkout.get_preference(@access_token, preference_id, false)
     end
 
     #
@@ -97,7 +97,7 @@ module MercadoPago
     # - payment_id: the id of the payment to be cancelled.
     #
     def cancel_payment(payment_id)
-      MercadoPago::Collection.cancel(@access_token, payment_id, @sandbox)
+      MercadoPago::Collection.cancel(@access_token, payment_id, false)
     end
 
     #
@@ -106,7 +106,7 @@ module MercadoPago
     # - payment_id: the id of the payment to be refunded.
     #
     def refund_payment(payment_id)
-      MercadoPago::Collection.refund(@access_token, payment_id, @sandbox)
+      MercadoPago::Collection.refund(@access_token, payment_id, false)
     end
 
     #

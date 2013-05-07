@@ -12,7 +12,7 @@ module MercadoPago
     # This URL is the base for all API calls.
     #
     MERCADOPAGO_URL = 'https://api.mercadolibre.com'
-    SANDBOX_MERCADOPAGO_URL = 'https://sandbox.mercadolibre.com'
+    SANDBOX_MERCADOPAGO_URL = 'https://api.mercadolibre.com/sandbox'
 
     #
     # Makes a POST request to a MercaPago API.
@@ -53,7 +53,6 @@ module MercadoPago
       url = sandbox ? SANDBOX_MERCADOPAGO_URL : MERCADOPAGO_URL
       args = [type, "#{url}#{path}", payload, headers].compact
       response = RestClient.send *args
-
       JSON.parse(response)
     rescue Exception => e
       JSON.load(e.response)
